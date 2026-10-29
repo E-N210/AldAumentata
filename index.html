@@ -29,9 +29,17 @@
     <div class="audioDiv" id="audioDiv">
         <h1 id="title"></h1>
         <h2>Ascolta la Poesia</h2>
-        <audio id="audio" controls src="./03 Cry Thunder.mp3"></audio>
+        <audio id="audio" controls src=""></audio>
         <p id="read"><u>Leggi il testo</u></p>
         <p id="poetry"></p>
+        <p id="credits">Credits</p>
+
+        <div id="creditsDiv">
+            <p>Illustrazioni e implementazione AR</p>
+            <b>Ennio Sorrentino</b>
+            <p>Voce Narrante</p>
+            <b>Adriana Busi</b>
+        </div>
 
     </div>
 
@@ -40,7 +48,7 @@
     const markers = {
         target0: {
                 title: "a Roberto Cerati ",
-                audio: "./03 Cry Thunder.mp3",
+                audio: "./audio/roberto.mp4",
                 particleImages: [ ],
                 text :`Hai un filo d’erba<br>
                         nei tuoi bianchi capelli,<br>
@@ -53,7 +61,7 @@
 
         target3: {
             title: "O ragazza infinita",
-            audio: "./03 Cry Thunder.mp3",
+            audio: "./audio/Ragazza.mp4",
             particleImages: [ ],
             text :`O ragazza infinita<br>
                     che brancoli nel buio<br>
@@ -74,7 +82,7 @@
 
         target1: {
             title: "per Tommaso",
-            audio: "./03 Cry Thunder.mp3",
+            audio: "./audio/tommaso.mp4",
             particleImages: [ ],
             text :`Raggiungono i figli dei poeti<br>
                     tanti bugiardi palloncini<br>
@@ -95,7 +103,7 @@
 
         target2: {
             title: "La minestra mandata da Dio",
-            audio: "./03 Cry Thunder.mp3",
+            audio: "./audio/minestra.mp4",
             particleImages: [ ],
             text :`La minestra mandata da Dio<br>
                     adesso si raffredda.<br>
@@ -119,9 +127,15 @@
     let read = document.getElementById("read")    
     let poetry = document.getElementById("poetry")
     let title = document.getElementById("title")
+    let audio =document.getElementById("audio")
+
+    let credits = document.getElementById("credits")
+    let creditsDiv =document.getElementById("creditsDiv")
     
     poetry.style.display="none"
+    creditsDiv.style.display="none"
     
+    var creditsOpen = 0
     var poetryOpen = 0
 
     function createElement(parent){
@@ -170,6 +184,7 @@
         const target = markers[`target${target_index}`];
         console.log(target)
         audioDiv.style.display = "flex"
+        audio.src = target.audio
 
         poetry.innerHTML = target.text
         title.innerHTML = target.title
@@ -179,14 +194,18 @@
     function elementLost() {
         audioDiv.style.display = "none"
         clearInterval(interval)
+
         poetryOpen = 0
         poetry.style.display="none"
+
+        creditsOpen= 0
+        creditsDiv.style.display="none"
     }
     
     // ENTITY 0
     main.addEventListener("targetFound", event => {  
         render(0)
-        interval = setInterval(() =>createElement(main), 500)
+        interval = setInterval(() =>createElement(main), 50)
     })
 
     main.addEventListener("targetLost", event => {  
@@ -197,7 +216,7 @@
     // ENTITY 1
     main1.addEventListener("targetFound", event => {  
         render(1)
-        interval = setInterval(() =>createElement(main1), 500)
+        interval = setInterval(() =>createElement(main1), 50)
     })
 
     main1.addEventListener("targetLost", event => {  
@@ -208,7 +227,7 @@
     // ENTITY 2
     main2.addEventListener("targetFound", event => {  
         render(2)
-        interval = setInterval(() =>createElement(main2), 500)
+        interval = setInterval(() =>createElement(main2), 50)
     })
 
     main2.addEventListener("targetLost", event => {  
@@ -219,13 +238,16 @@
     // ENTITY 3
     main3.addEventListener("targetFound", event => {  
         render(3)
-        interval = setInterval(() =>createElement(main3), 500)
+        interval = setInterval(() =>createElement(main3), 50)
     })
 
     main3.addEventListener("targetLost", event => {  
         main3.replaceChildren()
         elementLost()
     })
+
+
+    //Toggles
 
     read.addEventListener("click", event=>{
         if(poetryOpen==0){
@@ -234,6 +256,17 @@
         } else{
             poetryOpen = 0
             poetry.style.display="none"
+        }
+    })
+
+
+    credits.addEventListener("click", event=>{
+        if(creditsOpen==0){
+            creditsOpen = 1
+            creditsDiv.style.display="block"
+        } else{
+            creditsOpen= 0
+            creditsDiv.style.display="none"
         }
     })
 
