@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <link href="./style.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <a-scene mindar-image="imageTargetSrc: ./targetsDef.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+     
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      
+        <a-entity mindar-image-target="targetIndex: 0" id="main"> </a-entity>
+        <a-entity mindar-image-target="targetIndex: 1" id="main1"> </a-entity>
+        <a-entity mindar-image-target="targetIndex: 2" id="main2"> </a-entity>
+        <a-entity mindar-image-target="targetIndex: 3" id="main3"> </a-entity>
+    
+    </a-scene>
+
+    <div class="audioDiv" id="audioDiv">
+        <h1 id="title"></h1>
+        <h2>Ascolta la Poesia</h2>
+        <audio id="audio" controls src="./03 Cry Thunder.mp3"></audio>
+        <p id="read"><u>Leggi il testo</u></p>
+        <p id="poetry"></p>
+
+    </div>
+
+<script>
+
+    const markers = {
+        target0: {
+                title: "a Roberto Cerati ",
+                audio: "./03 Cry Thunder.mp3",
+                particleImages: [ ],
+                text :`Hai un filo d’erba<br>
+                        nei tuoi bianchi capelli,<br>
+                        un puro gelsomino d’attesa.<br>
+                        Così fiuti in me<br>
+                        il cuore sempre verde,<br>
+                        la ragazza d’un tempo<br>
+                        dall’anima canora.`
+                },
+
+        target3: {
+            title: "O ragazza infinita",
+            audio: "./03 Cry Thunder.mp3",
+            particleImages: [ ],
+            text :`O ragazza infinita<br>
+                    che brancoli nel buio<br>
+                    di un’ombra che cammina<br>
+                    in te:<br>
+                    mortale la tragedia dell’uomo<br>
+                    se cerca nei capelli<br>
+                    la tensione divina<br>
+                    e così quell’amore<br>
+                    che credi spensierato<br>
+                    è il cervello di un uomo<br>
+                    che ama la parola<br>
+                    e la parola è il gesto<br>
+                    che anima le madri<br>
+                    che vedono nei figli<br>
+                    un amore inventato.`
+             },
+
+        target1: {
+            title: "per Tommaso",
+            audio: "./03 Cry Thunder.mp3",
+            particleImages: [ ],
+            text :`Raggiungono i figli dei poeti<br>
+                    tanti bugiardi palloncini<br>
+                    che una mano, a volte inesperta,<br>
+                    lascia volare nel cielo.<br>
+                    Non sono tutti angeli Tommaso,<br>
+                    quelli che volano intorno,<br>
+                    e a volte è un amore grande<br>
+                    che tradisce il mistero di tuo padre.<br>
+                    Sempre misterioso è l’amore paterno,<br>
+                    credi, il mio sillabario sei tu.<br>
+                    Ho imparato parola per parola<br>
+                    a crescerti nella vita, sei il mio maestro.<br>
+                    Ma anche io come Pinocchio<br>
+                    vendo il mio abbecedario<br>
+                    per un bacio d’amore.`
+                },
+
+        target2: {
+            title: "La minestra mandata da Dio",
+            audio: "./03 Cry Thunder.mp3",
+            particleImages: [ ],
+            text :`La minestra mandata da Dio<br>
+                    adesso si raffredda.<br>
+                    È ora di rinnovare l’anima<br>
+                    e il cucchiaio.<br>
+                    Questo pane degli angeli infinito,<br>
+                    o questa comunione di lenticchia,<br>
+                    è questo digerir bene, almeno il cielo.<br>
+                    Dimmi come si può,<br>
+                    che digestivo adoperi tu adesso.`
+        }
+    };
+
+    let main = document.getElementById("main")
+    let main1 = document.getElementById("main1")
+    let main2 = document.getElementById("main2")
+    let main3 = document.getElementById("main3")
+
+    let audioDiv = document.getElementById("audioDiv")
+    let interval = null
+    let read = document.getElementById("read")    
+    let poetry = document.getElementById("poetry")
+    let title = document.getElementById("title")
+    
+    poetry.style.display="none"
+    
+    var poetryOpen = 0
+
+    function createElement(parent){
+
+        function move(entity){
+
+            entity.setAttribute("position", {        
+                x: entity.x,
+                y: entity.y,
+                z: counter / 20})
+
+            counter = counter + 1
+
+            if(counter==1000){counter = 0;
+                entity.setAttribute("position", {
+                    x: entity.x,
+                    y: entity.y,
+                    z:0})
+            }
+        }
+
+        var counter = 0
+
+        const x = -1 + Math.random()*2
+        const y = -1 + Math.random()*2
+
+        const newEntity = document.createElement('a-entity')
+
+        newEntity.x = x;
+        newEntity.y = y;
+
+        newEntity.setAttribute('position', {x: x, y: y});
+        newEntity.setAttribute('geometry', {
+            primitive: 'plane',
+            height: 0.3,
+            width: 0.3,
+        });
+
+        parent.appendChild(newEntity)
+    
+        setInterval(() => move(newEntity), 1)
+
+    }
+
+    function render(target_index){
+        const target = markers[`target${target_index}`];
+        console.log(target)
+        audioDiv.style.display = "flex"
+
+        poetry.innerHTML = target.text
+        title.innerHTML = target.title
+        
+    }
+
+    function elementLost() {
+        audioDiv.style.display = "none"
+        clearInterval(interval)
+        poetryOpen = 0
+        poetry.style.display="none"
+    }
+    
+    // ENTITY 0
+    main.addEventListener("targetFound", event => {  
+        render(0)
+        interval = setInterval(() =>createElement(main), 500)
+    })
+
+    main.addEventListener("targetLost", event => {  
+        main.replaceChildren()
+        elementLost()
+    })
+
+    // ENTITY 1
+    main1.addEventListener("targetFound", event => {  
+        render(1)
+        interval = setInterval(() =>createElement(main1), 500)
+    })
+
+    main1.addEventListener("targetLost", event => {  
+        main1.replaceChildren()
+        elementLost()
+    })
+
+    // ENTITY 2
+    main2.addEventListener("targetFound", event => {  
+        render(2)
+        interval = setInterval(() =>createElement(main2), 500)
+    })
+
+    main2.addEventListener("targetLost", event => {  
+        main2.replaceChildren()
+        elementLost()
+    })
+
+    // ENTITY 3
+    main3.addEventListener("targetFound", event => {  
+        render(3)
+        interval = setInterval(() =>createElement(main3), 500)
+    })
+
+    main3.addEventListener("targetLost", event => {  
+        main3.replaceChildren()
+        elementLost()
+    })
+
+    read.addEventListener("click", event=>{
+        if(poetryOpen==0){
+            poetryOpen = 1
+            poetry.style.display="block"
+        } else{
+            poetryOpen = 0
+            poetry.style.display="none"
+        }
+    })
+
+</script>
+   
+</body>
+</html>
