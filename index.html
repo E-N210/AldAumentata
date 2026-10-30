@@ -5,272 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-
     <link href="./style.css" rel="stylesheet" />
 
 </head>
 <body>
+        <div class="page" id="page1">
 
-    <a-scene mindar-image="imageTargetSrc: ./targetsDef.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-     
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-      
-        <a-entity mindar-image-target="targetIndex: 0" id="main"> </a-entity>
-        <a-entity mindar-image-target="targetIndex: 1" id="main1"> </a-entity>
-        <a-entity mindar-image-target="targetIndex: 2" id="main2"> </a-entity>
-        <a-entity mindar-image-target="targetIndex: 3" id="main3"> </a-entity>
-    
-    </a-scene>
-
-    <div class="audioDiv" id="audioDiv">
-        <h1 id="title"></h1>
-        <h2>Ascolta la Poesia</h2>
-        <audio id="audio" controls src=""></audio>
-        <p id="read"><u>Leggi il testo</u></p>
-        <p id="poetry"></p>
-        <p id="credits">Credits</p>
-
-        <div id="creditsDiv">
-            <p>Illustrazioni e implementazione AR</p>
-            <b>Ennio Sorrentino</b>
-            <p>Voce Narrante</p>
-            <b>Adriana Busi</b>
+            <h1 id="title"></h1>
+            <p id="text"></p>
+        
+        <div id="next">Continua...</div>
         </div>
 
-    </div>
+        <p id="skip">Salta l'Introduzione</p>
 
+
+
+</body>
 <script>
 
-    const markers = {
-        target0: {
-                title: "a Roberto Cerati ",
-                audio: "./audio/roberto.mp4",
-                particleImages: [ ],
-                text :`Hai un filo d’erba<br>
-                        nei tuoi bianchi capelli,<br>
-                        un puro gelsomino d’attesa.<br>
-                        Così fiuti in me<br>
-                        il cuore sempre verde,<br>
-                        la ragazza d’un tempo<br>
-                        dall’anima canora.`
-                },
+    const pages = {
+        pageOne:{
+            title : "Benvenuto!", 
+            text :  `AldAumentata è un'esperienza AR ispirata alle poesie di Alda Merini`,
+            next : "pageTwo",
+            cta:"Continua..."
+        },
+        
+        pageTwo:{
+            title : "Inquadra <br>le opere", 
+            text :  `ti troverai davanti 4 quadretti, inquadrali per vederli prendere vita`,
+            next : "pageThree",
+            cta:"Continua..."
+        },
 
-        target3: {
-            title: "O ragazza infinita",
-            audio: "./audio/Ragazza.mp4",
-            particleImages: [ ],
-            text :`O ragazza infinita<br>
-                    che brancoli nel buio<br>
-                    di un’ombra che cammina<br>
-                    in te:<br>
-                    mortale la tragedia dell’uomo<br>
-                    se cerca nei capelli<br>
-                    la tensione divina<br>
-                    e così quell’amore<br>
-                    che credi spensierato<br>
-                    è il cervello di un uomo<br>
-                    che ama la parola<br>
-                    e la parola è il gesto<br>
-                    che anima le madri<br>
-                    che vedono nei figli<br>
-                    un amore inventato.`
-             },
-
-        target1: {
-            title: "per Tommaso",
-            audio: "./audio/tommaso.mp4",
-            particleImages: [ ],
-            text :`Raggiungono i figli dei poeti<br>
-                    tanti bugiardi palloncini<br>
-                    che una mano, a volte inesperta,<br>
-                    lascia volare nel cielo.<br>
-                    Non sono tutti angeli Tommaso,<br>
-                    quelli che volano intorno,<br>
-                    e a volte è un amore grande<br>
-                    che tradisce il mistero di tuo padre.<br>
-                    Sempre misterioso è l’amore paterno,<br>
-                    credi, il mio sillabario sei tu.<br>
-                    Ho imparato parola per parola<br>
-                    a crescerti nella vita, sei il mio maestro.<br>
-                    Ma anche io come Pinocchio<br>
-                    vendo il mio abbecedario<br>
-                    per un bacio d’amore.`
-                },
-
-        target2: {
-            title: "La minestra mandata da Dio",
-            audio: "./audio/minestra.mp4",
-            particleImages: [ ],
-            text :`La minestra mandata da Dio<br>
-                    adesso si raffredda.<br>
-                    È ora di rinnovare l’anima<br>
-                    e il cucchiaio.<br>
-                    Questo pane degli angeli infinito,<br>
-                    o questa comunione di lenticchia,<br>
-                    è questo digerir bene, almeno il cielo.<br>
-                    Dimmi come si può,<br>
-                    che digestivo adoperi tu adesso.`
-        }
-    };
-
-    let main = document.getElementById("main")
-    let main1 = document.getElementById("main1")
-    let main2 = document.getElementById("main2")
-    let main3 = document.getElementById("main3")
-
-    let audioDiv = document.getElementById("audioDiv")
-    let interval = null
-    let read = document.getElementById("read")    
-    let poetry = document.getElementById("poetry")
-    let title = document.getElementById("title")
-    let audio =document.getElementById("audio")
-
-    let credits = document.getElementById("credits")
-    let creditsDiv =document.getElementById("creditsDiv")
-    
-    poetry.style.display="none"
-    creditsDiv.style.display="none"
-    
-    var creditsOpen = 0
-    var poetryOpen = 0
-
-    function createElement(parent){
-
-        function move(entity){
-
-            entity.setAttribute("position", {        
-                x: entity.x,
-                y: entity.y,
-                z: counter / 20})
-
-            counter = counter + 1
-
-            if(counter==1000){counter = 0;
-                entity.setAttribute("position", {
-                    x: entity.x,
-                    y: entity.y,
-                    z:0})
-            }
-        }
-
-        var counter = 0
-
-        const x = -1 + Math.random()*2
-        const y = -1 + Math.random()*2
-
-        const newEntity = document.createElement('a-entity')
-
-        newEntity.x = x;
-        newEntity.y = y;
-
-        newEntity.setAttribute('position', {x: x, y: y});
-        newEntity.setAttribute('geometry', {
-            primitive: 'plane',
-            height: 0.3,
-            width: 0.3,
-        });
-
-        parent.appendChild(newEntity)
-    
-        setInterval(() => move(newEntity), 1)
-
-    }
-
-    function render(target_index){
-        const target = markers[`target${target_index}`];
-        console.log(target)
-        audioDiv.style.display = "flex"
-        audio.src = target.audio
-
-        poetry.innerHTML = target.text
-        title.innerHTML = target.title
+        pageThree:{
+            title : "Ascolta <br>le Poesie", 
+            text :  `Ascolta la poesia a cui ogni opera è ispirata ... Indossa le cuffie per non disturbare gli altri visitatori`,
+            cta:`<b>Inizia!</b>`
+        },
         
     }
 
-    function elementLost() {
-        audioDiv.style.display = "none"
-        clearInterval(interval)
-
-        poetryOpen = 0
-        poetry.style.display="none"
-
-        creditsOpen= 0
-        creditsDiv.style.display="none"
-    }
     
-    // ENTITY 0
-    main.addEventListener("targetFound", event => {  
-        render(0)
-        interval = setInterval(() =>createElement(main), 50)
-    })
 
-    main.addEventListener("targetLost", event => {  
-        main.replaceChildren()
-        elementLost()
-    })
+var speed = 80;
 
-    // ENTITY 1
-    main1.addEventListener("targetFound", event => {  
-        render(1)
-        interval = setInterval(() =>createElement(main1), 50)
-    })
+let currentPage = pages["pageOne"];
+var page = 0
 
-    main1.addEventListener("targetLost", event => {  
-        main1.replaceChildren()
-        elementLost()
-    })
+let textDiv = document.getElementById("text");
+let titleDiv = document.getElementById("title");
+let next = document.getElementById("next")
+let skip = document.getElementById("skip")
 
-    // ENTITY 2
-    main2.addEventListener("targetFound", event => {  
-        render(2)
-        interval = setInterval(() =>createElement(main2), 50)
-    })
+next.style.display="none"
 
-    main2.addEventListener("targetLost", event => {  
-        main2.replaceChildren()
-        elementLost()
-    })
+function typeWriter(text, element) {
+    let i = 0; // Independent counter for each call
 
-    // ENTITY 3
-    main3.addEventListener("targetFound", event => {  
-        render(3)
-        interval = setInterval(() =>createElement(main3), 50)
-    })
-
-    main3.addEventListener("targetLost", event => {  
-        main3.replaceChildren()
-        elementLost()
-    })
-
-
-    //Toggles
-
-    read.addEventListener("click", event=>{
-        if(poetryOpen==0){
-            poetryOpen = 1
-            poetry.style.display="block"
+    function type() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
         } else{
-            poetryOpen = 0
-            poetry.style.display="none"
+            next.style.display="flex"
         }
-    })
+    }
+
+    type();
+}
+
+next.addEventListener("click", event=>{
+
+    if(page<2){
+        page = page+1
 
 
-    credits.addEventListener("click", event=>{
-        if(creditsOpen==0){
-            creditsOpen = 1
-            creditsDiv.style.display="block"
-        } else{
-            creditsOpen= 0
-            creditsDiv.style.display="none"
-        }
+        next.style.display="none"
+        textDiv.innerHTML=""
+        currentPage =pages[currentPage.next]
+
+        next.innerHTML=currentPage.cta
+
+        typeWriter(currentPage.text, textDiv);
+        titleDiv.innerHTML=currentPage.title
+
+
+        titleDiv.style.animation = "none";
+        titleDiv.offsetHeight; // Force browser reflow
+        titleDiv.style.animation = "fadeIn 1s ease";
+
+
+    } else{
+        window.open("./main.html", "_self")
+    }
+
+})
+
+
+
+    typeWriter(currentPage.text, textDiv);
+    titleDiv.innerHTML=currentPage.title
+
+skip.addEventListener("click", event=>{
+            window.open("./main.html", "_self")
     })
 
 </script>
-   
-</body>
 </html>
