@@ -18,85 +18,6 @@
     text-align: center;
 }
 
-audio::-webkit-media-controls-panel {
-    background-color: #ec413d;
-    color: white;
-}
-
-audio::-webkit-media-controls-mute-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-play-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-current-time-display{
-        color: white;
-}
-
-audio::-webkit-media-controls-time-remaining-display{
-        color: white;
-}
-
-audio::-webkit-media-controls-timeline{
-        color: white;
-        filter: invert(1);
-}
-
-audio::-webkit-media-controls-volume-slider-container{
-        color: white;
-
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-volume-slider{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-seek-back-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-seek-forward-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-fullscreen-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-rewind-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-return-to-realtime-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
-audio::-webkit-media-controls-toggle-closed-captions-button{
-        color: white;
-        filter: invert(1);
-        opacity: 1;
-}
-
 .UI{
     background-color: black;
     position:absolute;
@@ -183,4 +104,17 @@ overflow: scroll;}
     text-align: center;
     transform: translate(-50%,-100px);
 }
+
+#creditsDiv{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:5px;
+}
+#creditsDiv b{
+    margin-bottom: 15px;
+}
+
 
