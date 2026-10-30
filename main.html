@@ -15,7 +15,7 @@
 </head>
 <body>
 
-    <a-scene mindar-image="imageTargetSrc: ./targetsDef.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: ./targetsDef.mind;" xr-mode-ui="enabled: false" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
      
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
       
@@ -88,7 +88,6 @@
                 "./imgs/cuori/PC7.png",
                 "./imgs/cuori/PC9.png",
                 "./imgs/cuori/PC10.png",
-                "./imgs/cuori/PC11.png",
                 "./imgs/cuori/PC12.png",
                 "./imgs/cuori/PC13.png",
                 "./imgs/cuori/PC14.png",
@@ -223,6 +222,8 @@
 
         const newEntity = document.createElement('a-entity')
 
+        newEntity.setAttribute("visible", false);
+
         newEntity.x = x;
         newEntity.y = y;
 
@@ -241,14 +242,16 @@
         loop: true,
         })
 
-
-
         newEntity.setAttribute("material", {
             src: target.particleImages[textureIndex],
             transparent: true,
             shader: "flat",
             side: "double"
         });
+
+        newEntity.addEventListener("materialtextureloaded", () => {
+            newEntity.setAttribute("visible", true);
+        }, { once: true });
 
         parent.appendChild(newEntity)
 
