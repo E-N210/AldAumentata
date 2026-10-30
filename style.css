@@ -112,6 +112,7 @@ overflow: scroll;}
     flex-direction: column;
     align-items: center;
     gap:5px;
+    font-size: 12px;
 }
 #creditsDiv b{
     margin-bottom: 15px;

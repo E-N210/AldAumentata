@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>AldAumentata</title>
 
 
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -51,7 +51,21 @@
         target0: {
                 title: "a Roberto Cerati ",
                 audio: "./audio/roberto.mp4",
-                particleImages: [ ],
+                particleImages: [ 
+                    "./imgs/music/PM1.png",
+                    "./imgs/music/PM2.png",
+                    "./imgs/music/PM3.png",                    
+                    "./imgs/music/PM4.png",
+                    "./imgs/music/PM5.png",
+                    "./imgs/music/PM6.png",                    
+                    "./imgs/music/PM7.png",
+                    "./imgs/music/PM8.png",
+                    "./imgs/music/PM9.png",                    
+                    "./imgs/music/PM10.png",
+                    "./imgs/music/PM11.png",
+                    "./imgs/music/PM12.png",
+
+                ],
                 text :`Hai un filo d’erba<br>
                         nei tuoi bianchi capelli,<br>
                         un puro gelsomino d’attesa.<br>
@@ -64,7 +78,24 @@
         target3: {
             title: "O ragazza infinita",
             audio: "./audio/Ragazza.mp4",
-            particleImages: [ ],
+            particleImages: [
+                "./imgs/cuori/PC1.png",
+                "./imgs/cuori/PC2.png",
+                "./imgs/cuori/PC3.png",
+                "./imgs/cuori/PC4.png",
+                "./imgs/cuori/PC5.png",
+                "./imgs/cuori/PC6.png",
+                "./imgs/cuori/PC7.png",
+                "./imgs/cuori/PC9.png",
+                "./imgs/cuori/PC10.png",
+                "./imgs/cuori/PC11.png",
+                "./imgs/cuori/PC12.png",
+                "./imgs/cuori/PC13.png",
+                "./imgs/cuori/PC14.png",
+                "./imgs/cuori/PC15.png",
+                "./imgs/cuori/PC16.png",
+                "./imgs/cuori/PC17.png",
+                ],
             text :`O ragazza infinita<br>
                     che brancoli nel buio<br>
                     di un’ombra che cammina<br>
@@ -85,7 +116,29 @@
         target1: {
             title: "per Tommaso",
             audio: "./audio/tommaso.mp4",
-            particleImages: [ ],
+            particleImages: [
+                "./imgs/letters/PL1.png",
+                "./imgs/letters/PL2.png",
+                "./imgs/letters/PL3.png",
+                "./imgs/letters/PL4.png",
+                "./imgs/letters/PL5.png",
+                "./imgs/letters/PL6.png",
+                "./imgs/letters/PL7.png",
+                "./imgs/letters/PL8.png",
+                "./imgs/letters/PL10.png",
+                "./imgs/letters/PL11.png",
+                "./imgs/letters/PL12.png",
+                "./imgs/letters/PL13.png",
+                "./imgs/letters/PL14.png",
+                "./imgs/letters/PL15.png",
+                "./imgs/letters/PL16.png",
+                "./imgs/letters/PL17.png",
+                "./imgs/letters/PL18.png",
+                "./imgs/letters/PL19.png",
+                "./imgs/letters/PL20.png",
+                "./imgs/letters/PL21.png",
+                "./imgs/letters/PL22.png",
+             ],
             text :`Raggiungono i figli dei poeti<br>
                     tanti bugiardi palloncini<br>
                     che una mano, a volte inesperta,<br>
@@ -106,7 +159,25 @@
         target2: {
             title: "La minestra mandata da Dio",
             audio: "./audio/minestra.mp4",
-            particleImages: [ ],
+            particleImages: [ 
+                "./imgs/stars/PS1.png",
+                "./imgs/stars/PS2.png",
+                "./imgs/stars/PS3.png",
+                "./imgs/stars/PS4.png",
+                "./imgs/stars/PS5.png",
+                "./imgs/stars/PS6.png",
+                "./imgs/stars/PS7.png",
+                "./imgs/stars/PS8.png",
+                "./imgs/stars/PS9.png",
+                "./imgs/stars/PS10.png",
+                "./imgs/stars/PS11.png",
+                "./imgs/stars/PS12.png",
+                "./imgs/stars/PS13.png",
+                "./imgs/stars/PS14.png",
+                "./imgs/stars/PS15.png",
+                "./imgs/stars/PS16.png",
+                "./imgs/stars/PS17.png",
+            ],
             text :`La minestra mandata da Dio<br>
                     adesso si raffredda.<br>
                     È ora di rinnovare l’anima<br>
@@ -140,10 +211,15 @@
     var creditsOpen = 0
     var poetryOpen = 0
 
-    function createElement(parent){
+    function createElement(parent, target_index){
+
+
+        const target = markers[`target${target_index}`];
 
         const x = -1 + Math.random()*2
         const y = -1 + Math.random()*2
+
+        const textureIndex = Math.floor(Math.random()*target.particleImages.length) 
 
         const newEntity = document.createElement('a-entity')
 
@@ -163,7 +239,16 @@
         dur: 8000,
         easing: "linear",
         loop: true,
-    })
+        })
+
+
+
+        newEntity.setAttribute("material", {
+            src: target.particleImages[textureIndex],
+            transparent: true,
+            shader: "flat",
+            side: "double"
+        });
 
         parent.appendChild(newEntity)
 
@@ -196,7 +281,7 @@
     // ENTITY 0
     main.addEventListener("targetFound", event => {  
         render(0)
-        interval = setInterval(() =>createElement(main), 250)
+        interval = setInterval(() =>createElement(main, 0), 250)
     })
 
     main.addEventListener("targetLost", event => {  
@@ -207,7 +292,7 @@
     // ENTITY 1
     main1.addEventListener("targetFound", event => {  
         render(1)
-        interval = setInterval(() =>createElement(main1), 250)
+        interval = setInterval(() =>createElement(main1, 1), 250)
     })
 
     main1.addEventListener("targetLost", event => {  
@@ -218,7 +303,7 @@
     // ENTITY 2
     main2.addEventListener("targetFound", event => {  
         render(2)
-        interval = setInterval(() =>createElement(main2), 250)
+        interval = setInterval(() =>createElement(main2, 2), 250)
     })
 
     main2.addEventListener("targetLost", event => {  
@@ -229,7 +314,7 @@
     // ENTITY 3
     main3.addEventListener("targetFound", event => {  
         render(3)
-        interval = setInterval(() =>createElement(main3), 250)
+        interval = setInterval(() =>createElement(main3, 3), 250)
     })
 
     main3.addEventListener("targetLost", event => {  
